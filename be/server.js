@@ -88,4 +88,18 @@ io.on('connection', socket => {
 });
 
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => console.log(`\n✅ Whiteboard running at http://localhost:${PORT}\n`));
+server.listen(PORT, () => {
+  const os = require('os');
+  const networkInterfaces = os.networkInterfaces();
+  let localIp = 'localhost';
+  for (const interfaceName in networkInterfaces) {
+    for (const iface of networkInterfaces[interfaceName]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        localIp = iface.address;
+        break;
+      }
+    }
+  }
+  console.log(`\n✅ Whiteboard running locally at:   http://localhost:${PORT}`);
+  console.log(`✅ Shareable link for network users: http://${localIp}:${PORT}\n`);
+});

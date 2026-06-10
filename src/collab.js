@@ -99,8 +99,9 @@ function doJoin() {
 function connectSock(target) {
   if (sock) sock.disconnect();
 
-  const serverUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:3001'
+  const isDevServer = window.location.port && window.location.port !== '3001' && window.location.port !== '3000';
+  const serverUrl = isDevServer
+    ? `${window.location.protocol}//${window.location.hostname}:3001`
     : window.location.origin;
 
   sock = io(serverUrl, { transports: ['websocket', 'polling'] });
@@ -131,16 +132,19 @@ function connectSock(target) {
     if (op.userId === myId) return;
     if (op.type === 'add' && op.element) {
       state.els.push(op.element);
+      pushH(state.els);
       triggerRedraw();
       syncInfo();
     }
     if (op.type === 'delete' && op.elementId) {
       state.els = state.els.filter(e => e.id !== op.elementId);
+      pushH(state.els);
       triggerRedraw();
       syncInfo();
     }
     if (op.type === 'clear') {
       state.els = [];
+      pushH(state.els);
       triggerRedraw();
       syncInfo();
     }
