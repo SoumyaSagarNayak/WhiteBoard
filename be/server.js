@@ -10,9 +10,9 @@ const io = new Server(server, {
   cors: { origin: '*', methods: ['GET','POST'] }
 });
 
-// Serve the whiteboard HTML
-app.use(express.static(path.join(__dirname, '..')));
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../whiteboard.html')));
+// Serve the whiteboard HTML from Vite's built dist directory
+app.use(express.static(path.join(__dirname, '../dist')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../dist/index.html')));
 
 // In-memory rooms: { roomId: { elements: [], users: {} } }
 const rooms = {};

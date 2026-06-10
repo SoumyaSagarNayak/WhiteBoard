@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Whiteboard</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <canvas id="wb"></canvas>
+  <textarea id="tinput" rows="2" placeholder="Type… (Enter to commit, Esc to cancel)"></textarea>
+
+  <!-- TOOLBAR -->
+  <div id="toolbar">
+    <div id="rail">
+      <div style="padding:4px 0 2px;display:flex;justify-content:center">
+        <svg width="20" height="20" viewBox="0 0 28 28" fill="none"><path d="M4 24L10 8L16 16L20 10L24 24H4Z" stroke="#5c6bc0" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10" cy="8" r="2" fill="#a29bfe"/></svg>
+      </div>
+      <div class="rdiv"></div>
+      <div id="tbtns"></div>
+      <div class="rdiv"></div>
+      <button class="tbtn" id="bclip" title="Clip & Share">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+      </button>
+      <div class="rdiv"></div>
+      <button class="tbtn" id="bundo" title="Undo (Ctrl+Z)">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+      </button>
+      <button class="tbtn" id="bredo" title="Redo (Ctrl+Y)">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="15 14 20 9 15 4"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg>
+      </button>
+      <div class="rdiv"></div>
+      <button class="tbtn" id="btools" title="Tools"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
+      <button class="tbtn" id="bstyle" title="Style"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 20a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg></button>
+      <button class="tbtn" id="btexttab" title="Text"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></button>
+      <button class="tbtn" id="bactions" title="Actions"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></button>
+    </div>
+    <div id="sidebar" style="width:0">
+      <div class="sbw">
+        <div class="sbh"><span class="sbt" id="sbtitle">Tools</span>
+          <button class="sbx" id="sbclose"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="sbb" id="sbbody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <svg width="18" height="18" viewBox="0 0 28 28" fill="none"><path d="M4 24L10 8L16 16L20 10L24 24H4Z" stroke="#5c6bc0" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10" cy="8" r="2" fill="#a29bfe"/></svg>
+    <span style="color:#e0e0f0;font-size:14px;font-weight:700;letter-spacing:-.4px">Whiteboard</span>
+    <div class="td"></div><span id="tt">Pencil</span><div class="td"></div><span id="ti">0 elements · 100%</span>
+  </div>
+
+  <!-- HINTS -->
+  <div id="hints">
+    <div class="hint"><kbd>Scroll</kbd><span>Zoom</span></div>
+    <div class="hint"><kbd>Alt+Drag</kbd><span>Pan</span></div>
+    <div class="hint"><kbd>Ctrl+Z/Y</kbd><span>Undo/Redo</span></div>
+    <div class="hint"><kbd>Del</kbd><span>Delete</span></div>
+  </div>
+
+  <!-- COLLAB -->
+  <div id="cw">
+    <button id="cbtn">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span id="cbtnl">Collaborate</span>
+    </button>
+    <div id="cpan">
+      <div class="cph"><span class="cpt" id="cptitle">Collaborate</span>
+        <button class="sbx" id="cpx"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="cpb" id="cpbody"></div>
+    </div>
+  </div>
+
+  <!-- CLIP OVERLAY -->
+  <div id="clov"><canvas id="clcv"></canvas>
+    <div id="clhint"><h3>✂ Drag to clip a region</h3><p>Click and drag to select any area</p></div>
+    <button id="clx"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+
+  <!-- PREVIEW MODAL -->
+  <div id="pvm"><div id="pvb">
+    <div class="pvh"><span class="pvt">✂ Clipped Region</span>
+      <button class="sbx" id="pvx"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div id="pvw"><img id="pvi" src="" alt=""/></div>
+    <div class="pvr">
+      <button class="pb" id="pvcopy">📋 Copy Image</button>
+      <button class="pb bl" id="pvdl">⬇ Download PNG</button>
+    </div>
+    <button id="pvre">← Select a different region</button>
+  </div></div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
