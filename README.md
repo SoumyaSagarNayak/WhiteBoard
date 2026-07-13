@@ -4,7 +4,7 @@ A modular, high-performance collaborative whiteboard application built with **Vi
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started:
 
 Follow these steps to set up and run the whiteboard application on your local machine.
 
